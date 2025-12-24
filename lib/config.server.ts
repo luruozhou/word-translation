@@ -4,26 +4,26 @@
 import path from 'path';
 import fs from 'fs';
 
-// 获取项目根目录（nextjs 的上一级）
+// 获取项目根目录（nextjs 目录）
 // process.cwd() 在 Next.js 中返回 nextjs 目录
 const NEXTJS_DIR = process.cwd();
 const ROOT_DIR = path.resolve(NEXTJS_DIR, '..');
 
 function loadConfig() {
-  // 先尝试在项目根目录查找（nextjs 的上一级）
-  let configPath = path.join(ROOT_DIR, 'config.json');
+  // 优先在 nextjs 目录下查找（用于 Vercel 部署）
+  let configPath = path.join(NEXTJS_DIR, 'config.json');
   
-  // 如果不存在，尝试在当前工作目录查找
+  // 如果不存在，尝试在项目根目录查找（开发环境兼容）
   if (!fs.existsSync(configPath)) {
-    configPath = path.join(NEXTJS_DIR, 'config.json');
+    configPath = path.join(ROOT_DIR, 'config.json');
   }
   
   if (!fs.existsSync(configPath)) {
     throw new Error(
       `缺少 config.json，用于读取 SUPABASE_URL / SUPABASE_KEY / ZHIPU_API_KEY\n` +
       `已尝试查找路径：\n` +
-      `1. ${path.join(ROOT_DIR, 'config.json')}\n` +
-      `2. ${path.join(NEXTJS_DIR, 'config.json')}\n` +
+      `1. ${path.join(NEXTJS_DIR, 'config.json')} (优先，用于 Vercel 部署)\n` +
+      `2. ${path.join(ROOT_DIR, 'config.json')} (开发环境兼容)\n` +
       `请确保 config.json 文件存在于上述路径之一，或使用环境变量`
     );
   }

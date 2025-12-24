@@ -6,6 +6,9 @@ import { getCurrentUser, refreshBillingPeriod } from '@/lib/auth';
 import { getSupabaseClient } from '@/lib/supabase';
 import { translateTextSync, estimateTokens } from '@/lib/translate';
 
+// 标记为动态路由，因为使用了 request.headers
+export const dynamic = 'force-dynamic';
+
 export async function POST(request: NextRequest) {
   try {
     // 获取 Authorization header
